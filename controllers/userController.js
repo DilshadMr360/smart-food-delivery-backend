@@ -55,10 +55,12 @@ const loginUser = async (req, res) => {
     res.json({
       success: true,
       token,
+      message: "Login successful",
       user: {
         name: user.name,  // Include the user's name
         email: user.email // Optionally include the user's email
       }
+
     });
   } catch (error) {
     console.log(error);
@@ -101,7 +103,8 @@ const registerUser = async (req, res) => {
     const token = createToken(user._id);
     res.json({
       success: true,
-      token
+      token,
+      message: "Registration successful"
     });
   } catch (error) {
     console.log(error);
