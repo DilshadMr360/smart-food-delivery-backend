@@ -25,7 +25,8 @@ const loginAdmin = async (req, res) => {
         success: true,
         token,
         userType: user.userType,
-        userId: user._id
+        userId: user._id,
+        name: user.name 
       });
     } catch (error) {
       console.log(error);
@@ -53,7 +54,11 @@ const loginUser = async (req, res) => {
     const token = createToken(user._id);
     res.json({
       success: true,
-      token
+      token,
+      user: {
+        name: user.name,  // Include the user's name
+        email: user.email // Optionally include the user's email
+      }
     });
   } catch (error) {
     console.log(error);
