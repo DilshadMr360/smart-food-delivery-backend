@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
     password:{type:String, required:true},
     cartData:{type:Object, default:{}},
     userType: { type: String, default: 'client' },  
+    profileImage: { type: String }, 
 },{minimize:false})
 
 
