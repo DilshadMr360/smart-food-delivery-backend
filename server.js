@@ -33,7 +33,7 @@ app.use("/api/user",userRouter)
 app.use("/api/cart",cartRouter)
 app.use("/api/order",orderRouter)
 app.use("/api/category", categoryRouter)
-
+app.use("/profiles", express.static('profileImages'));
 
 app.get("/", (req, res) => {
   res.send("API Working");

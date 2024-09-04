@@ -57,6 +57,7 @@ const loginUser = async (req, res) => {
       token,
       message: "Login successful",
       user: {
+        id: user._id,
         name: user.name,  // Include the user's name
         email: user.email // Optionally include the user's email
       }
@@ -112,8 +113,75 @@ const registerUser = async (req, res) => {
   }
 };
 
+// Update user profile
+const updateUserProfile = async (req, res) => {
+  const { name, currentPassword, newPassword, confirmNewPassword,userId} = req.body;
+
+  console.log('Received userId:', userId); // Log the userId
+  console.log('Request Body:', req.body);
+  try {
+    const updates = { name };
+
+    // Handle password change
+    if (currentPassword || newPassword || confirmNewPassword) {
+      const user = await userModel.findById(userId);
+
+      if (!user) {
+        return res.json({ success: false, message: "User not found" });
+      }
+
+      // Validate current password
+      if (currentPassword) {
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!isMatch) {
+          return res.json({ success: false, message: "Current password is incorrect" });
+        }
+      }
+
+      // Validate new passwords
+      if (newPassword) {
+        if (newPassword !== confirmNewPassword) {
+          return res.json({ success: false, message: "New passwords do not match" });
+        }
+
+        // Hash the new password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        updates.password = hashedPassword;
+      }
+    }
+
+    // Update profile image if provided
+    if (req.file) {
+      updates.profileImage = req.file.filename;
+    }
+
+    // Find the user and update their profile
+    const user = await userModel.findByIdAndUpdate(userId, updates, { new: true });
+
+    if (!user) {
+      return res.json({ success: false, message: "User not found" });
+    }
+
+    res.json({
+      success: true,
+      message: "Profile updated successfully",
+      user: {
+        name: user.name,
+        email: user.email,
+        image: user.profileImage
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.json({ success: false, message: "Error updating profile" });
+  }
+};
+
+
 // Create a token
 const createToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET);
 };
-export { loginUser, registerUser, loginAdmin };
+export { loginUser, registerUser, loginAdmin,updateUserProfile };
