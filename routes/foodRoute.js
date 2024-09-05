@@ -1,5 +1,5 @@
 import express from 'express';
-import { addFood, getFoodDetails, listFood, removeFood, updateFoodList} from '../controllers/foodController.js';
+import { addFood, getFoodDetails, listFood, removeFood, updateFoodList, updateFoodQuantity} from '../controllers/foodController.js';
 import multer from 'multer';
 
 
@@ -25,5 +25,6 @@ foodRouter.get( "/list",listFood)
 foodRouter.get("/edit/:id", getFoodDetails); 
 foodRouter.patch("/update/:id", upload.single("image"), updateFoodList);
 foodRouter.post("/remove", removeFood);
-    
+foodRouter.post('/update-quantity', updateFoodQuantity);
+
 export default foodRouter;
