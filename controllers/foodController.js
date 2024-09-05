@@ -14,6 +14,7 @@ const addFood = async (req,res)=>{
         name:req.body.name,
         description:req.body.description,
         price:req.body.price,
+        quantity: req.body.quantity,
         category:req.body.category,
         image:image_filename
     })
@@ -45,7 +46,7 @@ const getFoodDetails = async (req, res) => {
 const updateFoodList = async (req, res) => {
     try {
       const { id } = req.params;
-      const { name, description, price, category } = req.body;
+      const { name, description, price, category, quantity } = req.body;
   
       const food = await foodModel.findById(id);
   
@@ -53,7 +54,7 @@ const updateFoodList = async (req, res) => {
         return res.json({ success: false, message: "Food item not found" });
       }
   
-      const updateData = { name, description, price, category };
+      const updateData = { name, description, price, category,quantity };
   
       if (req.file) {
         fs.unlink(`uploads/${food.image}`, (err) => {
@@ -105,4 +106,38 @@ const removeFood = async (req,res) => {
             res.json({success:false,message:"Food Deleted Fail"})
     }
 }
-export {addFood, listFood, removeFood, updateFoodList, getFoodDetails}
+
+// In your food controller
+
+// Update food quantity
+const updateFoodQuantity = async (req, res) => {
+  try {
+    const { id, quantity } = req.body;
+    const food = await foodModel.findById(id);
+
+    if (!food) {
+      return res.json({ success: false, message: "Food item not found" });
+    }
+
+    if (food.quantity < quantity) {
+      return res.json({ success: false, message: "Not enough stock" });
+    }
+
+    food.quantity -= quantity;
+
+    if (food.quantity <= 0) {
+      food.quantity = 0;
+      // Optional: Mark item as out of stock or handle accordingly
+    }
+
+    await food.save();
+
+    res.json({ success: true, message: "Quantity updated successfully" });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: "Error updating quantity" });
+  }
+};
+
+
+export {addFood, listFood, removeFood, updateFoodList, getFoodDetails, updateFoodQuantity}
