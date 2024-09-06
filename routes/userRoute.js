@@ -1,5 +1,5 @@
 import express from 'express';
-import { loginUser, registerUser, loginAdmin, updateUserProfile } from '../controllers/userController.js';
+import { loginUser, registerUser, loginAdmin, updateUserProfile, getAllUsers } from '../controllers/userController.js';
 import multer from 'multer';
 import authMiddleware from '../middlewere/auth.js';
 
@@ -28,5 +28,9 @@ userRouter.post("/admin/login", loginAdmin);
 
 // userRouter.patch("/profile",upload.single('profileImage'), updateUserProfile);
 userRouter.patch("/profile", authMiddleware, upload.single('profileImage'), updateUserProfile);
+
+// Get all users (Admin)
+userRouter.get("/users-list", getAllUsers);
+
 
 export default userRouter;
