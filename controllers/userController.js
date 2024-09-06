@@ -57,6 +57,7 @@ const loginUser = async (req, res) => {
       token,
       message: "Login successful",
       user: {
+        profileImage: user.profileImage,
         id: user._id,
         name: user.name,  // Include the user's name
         email: user.email // Optionally include the user's email
@@ -168,9 +169,11 @@ const updateUserProfile = async (req, res) => {
       success: true,
       message: "Profile updated successfully",
       user: {
+        id: user.id,
         name: user.name,
         email: user.email,
-        image: user.profileImage
+        profileImage: user.profileImage,
+
       }
     });
   } catch (error) {
