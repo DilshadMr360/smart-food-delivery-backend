@@ -139,5 +139,17 @@ const updateFoodQuantity = async (req, res) => {
   }
 };
 
+// Get count of all food items
+const getFoodCount = async (req, res) => {
+  try {
+    const count = await foodModel.countDocuments({});
+    res.json({ success: true, count });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: "Error fetching food count" });
+  }
+};
 
-export {addFood, listFood, removeFood, updateFoodList, getFoodDetails, updateFoodQuantity}
+
+
+export {addFood, listFood, removeFood, updateFoodList, getFoodDetails, updateFoodQuantity, getFoodCount}

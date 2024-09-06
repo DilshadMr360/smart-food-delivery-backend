@@ -180,8 +180,21 @@ const updateUserProfile = async (req, res) => {
 };
 
 
+// Get all users (Admin)
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await userModel.find({}); // You can also filter based on userType
+    res.json({ success: true, users });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: "Error fetching users" });
+  }
+};
+
+
+
 // Create a token
 const createToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET);
 };
-export { loginUser, registerUser, loginAdmin,updateUserProfile };
+export { loginUser, registerUser, loginAdmin,updateUserProfile, getAllUsers };
